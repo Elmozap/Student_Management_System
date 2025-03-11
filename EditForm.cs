@@ -60,7 +60,7 @@ namespace StudentManagementSystem
                         Size = new System.Drawing.Size(130, 25)
                     };
                     CourseCmb.Items.AddRange(new string[] { "ABEL", "BSBA", "BSIT", "BPA" });
-                    CourseCmb.SelectedItem = studentData[i] != "" ? studentData[i] : "BSIT"; // Default Selection
+                    CourseCmb.SelectedItem = studentData[i] != "" ? studentData[i] : "BSIT";
                     scrollPanel.Controls.Add(CourseCmb);
                 }
                 else if (labels[i] == "Year")
@@ -72,7 +72,7 @@ namespace StudentManagementSystem
                         Size = new System.Drawing.Size(130, 25)
                     };
                     YearCmb.Items.AddRange(new string[] { "First", "Second", "Third", "Fourth" });
-                    YearCmb.SelectedItem = studentData[i] != "" ? studentData[i] : "First"; // Default Selection
+                    YearCmb.SelectedItem = studentData[i] != "" ? studentData[i] : "First";
                     scrollPanel.Controls.Add(YearCmb);
                 }
                 else
