@@ -26,3 +26,4 @@ C:\Users\Computer\Student Management\obj\Debug\net10.0-windows\refint\StudentMan
 C:\Users\Computer\Student Management\obj\Debug\net10.0-windows\StudentManagementSystem.pdb
 C:\Users\Computer\Student Management\obj\Debug\net10.0-windows\StudentManagementSystem.genruntimeconfig.cache
 C:\Users\Computer\Student Management\obj\Debug\net10.0-windows\ref\StudentManagementSystem.dll
+C:\Users\Computer\Student Management\obj\Debug\net10.0-windows\StudentManagementSystem.sourcelink.json

@@ -23,19 +23,23 @@ namespace StudentManagementSystem
             }
 
             this.Text = "Edit Student Details";
-            this.Size = new System.Drawing.Size(500, 550);
+            this.Size = new System.Drawing.Size(550, 400); // Adjusted for two-column layout
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.BackColor = System.Drawing.ColorTranslator.FromHtml("#D3D3D3");
 
+            int leftColumnX = 30;
+            int rightColumnX = 280;
             int yOffset = 20;
             InputFields = new TextBox[labels.Length];
 
             for (int i = 0; i < labels.Length; i++)
             {
+                int currentX = i % 2 == 0 ? leftColumnX : rightColumnX; // Alternate between left and right columns
+
                 Label InfoLbl = new Label();
                 InfoLbl.Text = labels[i] + ":";
-                InfoLbl.Location = new System.Drawing.Point(30, yOffset);
+                InfoLbl.Location = new System.Drawing.Point(currentX, yOffset);
                 InfoLbl.AutoSize = true;
                 Controls.Add(InfoLbl);
 
@@ -43,8 +47,8 @@ namespace StudentManagementSystem
                 {
                     CourseCmb = new ComboBox();
                     CourseCmb.Name = "CourseCmb";
-                    CourseCmb.Location = new System.Drawing.Point(180, yOffset - 3);
-                    CourseCmb.Size = new System.Drawing.Size(200, 25);
+                    CourseCmb.Location = new System.Drawing.Point(currentX + 130, yOffset - 3);
+                    CourseCmb.Size = new System.Drawing.Size(120, 25);
                     CourseCmb.Items.AddRange(new string[] { "ABEL", "BSBA", "BSIT", "BPA" });
                     CourseCmb.SelectedItem = studentData[i];
                     Controls.Add(CourseCmb);
@@ -53,8 +57,8 @@ namespace StudentManagementSystem
                 {
                     YearCmb = new ComboBox();
                     YearCmb.Name = "YearCmb";
-                    YearCmb.Location = new System.Drawing.Point(180, yOffset - 3);
-                    YearCmb.Size = new System.Drawing.Size(200, 25);
+                    YearCmb.Location = new System.Drawing.Point(currentX + 130, yOffset - 3);
+                    YearCmb.Size = new System.Drawing.Size(120, 25);
                     YearCmb.Items.AddRange(new string[] { "First", "Second", "Third", "Fourth" });
                     YearCmb.SelectedItem = studentData[i];
                     Controls.Add(YearCmb);
@@ -63,8 +67,8 @@ namespace StudentManagementSystem
                 {
                     InputFields[i] = new TextBox();
                     InputFields[i].Name = labels[i].Replace(" ", "") + "Txt";
-                    InputFields[i].Location = new System.Drawing.Point(180, yOffset - 3);
-                    InputFields[i].Size = new System.Drawing.Size(200, 25);
+                    InputFields[i].Location = new System.Drawing.Point(currentX + 130, yOffset - 3);
+                    InputFields[i].Size = new System.Drawing.Size(120, 25);
                     InputFields[i].Text = studentData[i] ?? "";
 
                     if (labels[i] == "Age" || labels[i].Contains("Contact"))
@@ -81,9 +85,16 @@ namespace StudentManagementSystem
 
                     Controls.Add(InputFields[i]);
                 }
-                yOffset += 35;
+
+                if (i % 2 == 1) // Move to next row after every two fields
+                {
+                    yOffset += 35;
+                }
             }
 
+            yOffset += 20; // Adjust spacing before buttons
+
+            // 💾 Save Button
             Button SaveBtn = new Button();
             SaveBtn.Text = "Save Changes";
             SaveBtn.Location = new System.Drawing.Point(180, yOffset);
@@ -91,6 +102,7 @@ namespace StudentManagementSystem
             SaveBtn.Click += SaveBtn_Click;
             Controls.Add(SaveBtn);
 
+            // 🔙 Back Button
             Button BackBtn = new Button();
             BackBtn.Text = "Back";
             BackBtn.Location = new System.Drawing.Point(50, yOffset);
@@ -98,6 +110,7 @@ namespace StudentManagementSystem
             BackBtn.Click += BackBtn_Click;
             Controls.Add(BackBtn);
         }
+
         private void SaveBtn_Click(object sender, EventArgs e)
         {
             string[] updatedData = new string[labels.Length];
