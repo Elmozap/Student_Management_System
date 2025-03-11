@@ -23,53 +23,67 @@ namespace StudentManagementSystem
             }
 
             this.Text = "Edit Student Details";
-            this.Size = new System.Drawing.Size(550, 400); // Adjusted for two-column layout
+            this.Size = new System.Drawing.Size(600, 500);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.BackColor = System.Drawing.ColorTranslator.FromHtml("#D3D3D3");
 
+            Panel scrollPanel = new Panel();
+            scrollPanel.AutoScroll = true;
+            scrollPanel.Dock = DockStyle.Fill;
+            scrollPanel.AutoSize = true;
+            this.Controls.Add(scrollPanel);
+
             int leftColumnX = 30;
-            int rightColumnX = 280;
+            int rightColumnX = 300;
             int yOffset = 20;
             InputFields = new TextBox[labels.Length];
 
             for (int i = 0; i < labels.Length; i++)
             {
-                int currentX = i % 2 == 0 ? leftColumnX : rightColumnX; // Alternate between left and right columns
+                int currentX = i % 2 == 0 ? leftColumnX : rightColumnX;
 
-                Label InfoLbl = new Label();
-                InfoLbl.Text = labels[i] + ":";
-                InfoLbl.Location = new System.Drawing.Point(currentX, yOffset);
-                InfoLbl.AutoSize = true;
-                Controls.Add(InfoLbl);
+                Label InfoLbl = new Label
+                {
+                    Text = labels[i] + ":",
+                    Location = new System.Drawing.Point(currentX, yOffset),
+                    AutoSize = true
+                };
+                scrollPanel.Controls.Add(InfoLbl);
 
                 if (labels[i] == "Course")
                 {
-                    CourseCmb = new ComboBox();
-                    CourseCmb.Name = "CourseCmb";
-                    CourseCmb.Location = new System.Drawing.Point(currentX + 130, yOffset - 3);
-                    CourseCmb.Size = new System.Drawing.Size(120, 25);
+                    CourseCmb = new ComboBox
+                    {
+                        Name = "CourseCmb",
+                        Location = new System.Drawing.Point(currentX + 140, yOffset - 3),
+                        Size = new System.Drawing.Size(130, 25)
+                    };
                     CourseCmb.Items.AddRange(new string[] { "ABEL", "BSBA", "BSIT", "BPA" });
-                    CourseCmb.SelectedItem = studentData[i];
-                    Controls.Add(CourseCmb);
+                    CourseCmb.SelectedItem = studentData[i] != "" ? studentData[i] : "BSIT"; // Default Selection
+                    scrollPanel.Controls.Add(CourseCmb);
                 }
                 else if (labels[i] == "Year")
                 {
-                    YearCmb = new ComboBox();
-                    YearCmb.Name = "YearCmb";
-                    YearCmb.Location = new System.Drawing.Point(currentX + 130, yOffset - 3);
-                    YearCmb.Size = new System.Drawing.Size(120, 25);
+                    YearCmb = new ComboBox
+                    {
+                        Name = "YearCmb",
+                        Location = new System.Drawing.Point(currentX + 140, yOffset - 3),
+                        Size = new System.Drawing.Size(130, 25)
+                    };
                     YearCmb.Items.AddRange(new string[] { "First", "Second", "Third", "Fourth" });
-                    YearCmb.SelectedItem = studentData[i];
-                    Controls.Add(YearCmb);
+                    YearCmb.SelectedItem = studentData[i] != "" ? studentData[i] : "First"; // Default Selection
+                    scrollPanel.Controls.Add(YearCmb);
                 }
                 else
                 {
-                    InputFields[i] = new TextBox();
-                    InputFields[i].Name = labels[i].Replace(" ", "") + "Txt";
-                    InputFields[i].Location = new System.Drawing.Point(currentX + 130, yOffset - 3);
-                    InputFields[i].Size = new System.Drawing.Size(120, 25);
-                    InputFields[i].Text = studentData[i] ?? "";
+                    InputFields[i] = new TextBox
+                    {
+                        Name = labels[i].Replace(" ", "") + "Txt",
+                        Location = new System.Drawing.Point(currentX + 140, yOffset - 3),
+                        Size = new System.Drawing.Size(130, 25),
+                        Text = studentData[i] ?? ""
+                    };
 
                     if (labels[i] == "Age" || labels[i].Contains("Contact"))
                     {
@@ -82,33 +96,34 @@ namespace StudentManagementSystem
                             }
                         };
                     }
-
-                    Controls.Add(InputFields[i]);
+                    scrollPanel.Controls.Add(InputFields[i]);
                 }
 
-                if (i % 2 == 1) // Move to next row after every two fields
+                if (i % 2 == 1)
                 {
                     yOffset += 35;
                 }
             }
 
-            yOffset += 20; // Adjust spacing before buttons
+            yOffset += 20;
 
-            // 💾 Save Button
-            Button SaveBtn = new Button();
-            SaveBtn.Text = "Save Changes";
-            SaveBtn.Location = new System.Drawing.Point(180, yOffset);
-            SaveBtn.Size = new System.Drawing.Size(120, 30);
+            Button SaveBtn = new Button
+            {
+                Text = "Save Changes",
+                Location = new System.Drawing.Point(200, yOffset),
+                Size = new System.Drawing.Size(120, 30)
+            };
             SaveBtn.Click += SaveBtn_Click;
-            Controls.Add(SaveBtn);
+            scrollPanel.Controls.Add(SaveBtn);
 
-            // 🔙 Back Button
-            Button BackBtn = new Button();
-            BackBtn.Text = "Back";
-            BackBtn.Location = new System.Drawing.Point(50, yOffset);
-            BackBtn.Size = new System.Drawing.Size(100, 30);
+            Button BackBtn = new Button
+            {
+                Text = "Back",
+                Location = new System.Drawing.Point(50, yOffset),
+                Size = new System.Drawing.Size(100, 30)
+            };
             BackBtn.Click += BackBtn_Click;
-            Controls.Add(BackBtn);
+            scrollPanel.Controls.Add(BackBtn);
         }
 
         private void SaveBtn_Click(object sender, EventArgs e)
@@ -119,11 +134,11 @@ namespace StudentManagementSystem
             {
                 if (labels[i] == "Course")
                 {
-                    updatedData[i] = CourseCmb?.SelectedItem?.ToString() ?? "";
+                    updatedData[i] = CourseCmb?.SelectedItem?.ToString() ?? "BSIT";
                 }
                 else if (labels[i] == "Year")
                 {
-                    updatedData[i] = YearCmb?.SelectedItem?.ToString() ?? "";
+                    updatedData[i] = YearCmb?.SelectedItem?.ToString() ?? "First";
                 }
                 else
                 {
@@ -132,11 +147,12 @@ namespace StudentManagementSystem
             }
 
             string[] requiredFields = { "Name", "Age", "Address", "Contact Number", "Email Address", "Course", "Year", "Guardian/Parent", "Guardian Contact" };
-            for (int i = 0; i < labels.Length; i++)
+            foreach (string field in requiredFields)
             {
-                if (requiredFields.Contains(labels[i]) && string.IsNullOrWhiteSpace(updatedData[i]))
+                int index = Array.IndexOf(labels, field);
+                if (index >= 0 && string.IsNullOrWhiteSpace(updatedData[index]))
                 {
-                    MessageBox.Show($"The field '{labels[i]}' is required.", "Missing Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show($"The field '{field}' is required.", "Missing Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
             }

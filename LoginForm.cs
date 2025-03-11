@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -6,11 +7,13 @@ namespace StudentManagementSystem
 {
     public partial class LoginForm : Form
     {
-        private string MockUsername = "admin"; 
+        private readonly string MockUsername = "admin";
         private string MockPassword = "password123"; 
         private int loginAttempts = 0;
 
         private Label AttemptsLbl;
+        private TextBox UsernameTxt, PasswordTxt;
+        private Label ErrorLbl;
 
         public LoginForm()
         {
@@ -20,76 +23,96 @@ namespace StudentManagementSystem
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.BackColor = System.Drawing.ColorTranslator.FromHtml("#D3D3D3");
 
-            Label UsernameLbl = new Label();
-            UsernameLbl.Text = "Username:";
-            UsernameLbl.Location = new System.Drawing.Point(30, 30);
-            UsernameLbl.AutoSize = true;
+            Label UsernameLbl = new Label
+            {
+                Text = "Username:",
+                Location = new System.Drawing.Point(30, 30),
+                AutoSize = true
+            };
             Controls.Add(UsernameLbl);
 
-            TextBox UsernameTxt = new TextBox();
-            UsernameTxt.Name = "UsernameTxt";
-            UsernameTxt.Location = new System.Drawing.Point(120, 25);
-            UsernameTxt.Size = new System.Drawing.Size(200, 25);
+            UsernameTxt = new TextBox
+            {
+                Name = "UsernameTxt",
+                Location = new System.Drawing.Point(120, 25),
+                Size = new System.Drawing.Size(200, 25)
+            };
             Controls.Add(UsernameTxt);
 
-            Label PasswordLbl = new Label();
-            PasswordLbl.Text = "Password:";
-            PasswordLbl.Location = new System.Drawing.Point(30, 70);
-            PasswordLbl.AutoSize = true;
+            Label PasswordLbl = new Label
+            {
+                Text = "Password:",
+                Location = new System.Drawing.Point(30, 70),
+                AutoSize = true
+            };
             Controls.Add(PasswordLbl);
 
-            TextBox PasswordTxt = new TextBox();
-            PasswordTxt.Name = "PasswordTxt";
-            PasswordTxt.Location = new System.Drawing.Point(120, 65);
-            PasswordTxt.Size = new System.Drawing.Size(200, 25);
-            PasswordTxt.PasswordChar = '*';
+            PasswordTxt = new TextBox
+            {
+                Name = "PasswordTxt",
+                Location = new System.Drawing.Point(120, 65),
+                Size = new System.Drawing.Size(200, 25),
+                PasswordChar = '*'
+            };
             Controls.Add(PasswordTxt);
 
-            Button LoginBtn = new Button();
-            LoginBtn.Text = "Login";
-            LoginBtn.Name = "LoginBtn";
-            LoginBtn.Size = new System.Drawing.Size(100, 30);
-            LoginBtn.BackColor = System.Drawing.Color.White;
-            LoginBtn.ForeColor = System.Drawing.Color.Black;
-            LoginBtn.Location = new System.Drawing.Point((this.ClientSize.Width - LoginBtn.Width) / 2, 110); // Centered
-            LoginBtn.Click += (sender, e) => loginBtn_Click(UsernameTxt.Text, PasswordTxt.Text);
+            Button LoginBtn = new Button
+            {
+                Text = "Login",
+                Name = "LoginBtn",
+                Size = new System.Drawing.Size(100, 30),
+                BackColor = System.Drawing.Color.White,
+                ForeColor = System.Drawing.Color.Black,
+                Location = new System.Drawing.Point((this.ClientSize.Width - 100) / 2, 110)
+            };
+            LoginBtn.Click += LoginBtn_Click;
             Controls.Add(LoginBtn);
 
-            Button ChangePassBtn = new Button();
-            ChangePassBtn.Text = "Change Password";
-            ChangePassBtn.Name = "ChangePassBtn";
-            ChangePassBtn.Location = new System.Drawing.Point(30, 150);
-            ChangePassBtn.Size = new System.Drawing.Size(135, 30);
+            Button ChangePassBtn = new Button
+            {
+                Text = "Change Password",
+                Name = "ChangePassBtn",
+                Location = new System.Drawing.Point(30, 150),
+                Size = new System.Drawing.Size(135, 30)
+            };
             ChangePassBtn.Click += ChangePassBtn_Click;
             Controls.Add(ChangePassBtn);
 
-            Button ForgotPassBtn = new Button();
-            ForgotPassBtn.Text = "Forgot Password?";
-            ForgotPassBtn.Name = "ForgotPassBtn";
-            ForgotPassBtn.Location = new System.Drawing.Point(180, 150);
-            ForgotPassBtn.Size = new System.Drawing.Size(140, 30);
+            Button ForgotPassBtn = new Button
+            {
+                Text = "Forgot Password?",
+                Name = "ForgotPassBtn",
+                Location = new System.Drawing.Point(180, 150),
+                Size = new System.Drawing.Size(140, 30)
+            };
             ForgotPassBtn.Click += ForgotPassBtn_Click;
             Controls.Add(ForgotPassBtn);
 
-            Label ErrorLbl = new Label();
-            ErrorLbl.Name = "ErrorLbl";
-            ErrorLbl.ForeColor = System.Drawing.Color.Red;
-            ErrorLbl.Location = new System.Drawing.Point(30, 190);
-            ErrorLbl.Size = new System.Drawing.Size(300, 20);
-            ErrorLbl.Visible = false;
+            ErrorLbl = new Label
+            {
+                Name = "ErrorLbl",
+                ForeColor = System.Drawing.Color.Red,
+                Location = new System.Drawing.Point(30, 190),
+                Size = new System.Drawing.Size(300, 20),
+                Visible = false
+            };
             Controls.Add(ErrorLbl);
 
-            AttemptsLbl = new Label();
-            AttemptsLbl.Text = $"Login Attempts: {loginAttempts}/5";
-            AttemptsLbl.Location = new System.Drawing.Point(30, 220);
-            AttemptsLbl.AutoSize = true;
+            AttemptsLbl = new Label
+            {
+                Text = $"Login Attempts: {loginAttempts}/5",
+                Location = new System.Drawing.Point(30, 220),
+                AutoSize = true
+            };
             Controls.Add(AttemptsLbl);
         }
 
-        private void loginBtn_Click(string username, string password)
+        private void LoginBtn_Click(object sender, EventArgs e)
         {
-            Label? ErrorLbl = Controls.Find("ErrorLbl", true).FirstOrDefault() as Label;
-            if (ErrorLbl == null) return;
+            if (UsernameTxt == null || PasswordTxt == null || ErrorLbl == null) return;
+
+            string username = UsernameTxt.Text.Trim();
+            string password = PasswordTxt.Text.Trim();
 
             if (username == MockUsername && password == MockPassword)
             {
@@ -121,7 +144,18 @@ namespace StudentManagementSystem
                 if (loginAttempts >= 5)
                 {
                     MessageBox.Show("Too many failed attempts! Click OK to reset password.", "Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    System.Diagnostics.Process.Start("https://password-reset-link.com");
+                    try
+                    {
+                        Process.Start(new ProcessStartInfo
+                        {
+                            FileName = "https://password-reset-link.com",
+                            UseShellExecute = true
+                        });
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Unable to open reset link.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }
@@ -141,66 +175,25 @@ namespace StudentManagementSystem
                 changePassForm.BackColor = System.Drawing.ColorTranslator.FromHtml("#D3D3D3");
                 changePassForm.FormBorderStyle = FormBorderStyle.FixedDialog;
 
-                Label userLbl = new Label();
-                userLbl.Text = "Confirm Username:";
-                userLbl.Location = new System.Drawing.Point(20, 20);
-                userLbl.AutoSize = true;
-                changePassForm.Controls.Add(userLbl);
+                Label userLbl = new Label { Text = "Confirm Username:", Location = new System.Drawing.Point(20, 20), AutoSize = true };
+                TextBox userTxt = new TextBox { Location = new System.Drawing.Point(140, 15), Size = new System.Drawing.Size(150, 25) };
 
-                TextBox userTxt = new TextBox();
-                userTxt.Location = new System.Drawing.Point(140, 15);
-                userTxt.Size = new System.Drawing.Size(150, 25);
-                changePassForm.Controls.Add(userTxt);
+                Label oldPassLbl = new Label { Text = "Old Password:", Location = new System.Drawing.Point(20, 60), AutoSize = true };
+                TextBox oldPassTxt = new TextBox { Location = new System.Drawing.Point(140, 55), Size = new System.Drawing.Size(150, 25), PasswordChar = '*' };
 
-                Label oldPassLbl = new Label();
-                oldPassLbl.Text = "Old Password:";
-                oldPassLbl.Location = new System.Drawing.Point(20, 60);
-                oldPassLbl.AutoSize = true;
-                changePassForm.Controls.Add(oldPassLbl);
+                Label newPassLbl = new Label { Text = "New Password:", Location = new System.Drawing.Point(20, 100), AutoSize = true };
+                TextBox newPassTxt = new TextBox { Location = new System.Drawing.Point(140, 95), Size = new System.Drawing.Size(150, 25), PasswordChar = '*' };
 
-                TextBox oldPassTxt = new TextBox();
-                oldPassTxt.Location = new System.Drawing.Point(140, 55);
-                oldPassTxt.Size = new System.Drawing.Size(150, 25);
-                oldPassTxt.PasswordChar = '*';
-                changePassForm.Controls.Add(oldPassTxt);
-
-                Label confirmOldPassLbl = new Label();
-                confirmOldPassLbl.Text = "Confirm Old Password:";
-                confirmOldPassLbl.Location = new System.Drawing.Point(20, 100);
-                confirmOldPassLbl.AutoSize = true;
-                changePassForm.Controls.Add(confirmOldPassLbl);
-
-                TextBox confirmOldPassTxt = new TextBox();
-                confirmOldPassTxt.Location = new System.Drawing.Point(140, 95);
-                confirmOldPassTxt.Size = new System.Drawing.Size(150, 25);
-                confirmOldPassTxt.PasswordChar = '*';
-                changePassForm.Controls.Add(confirmOldPassTxt);
-
-                Label newPassLbl = new Label();
-                newPassLbl.Text = "New Password:";
-                newPassLbl.Location = new System.Drawing.Point(20, 140);
-                newPassLbl.AutoSize = true;
-                changePassForm.Controls.Add(newPassLbl);
-
-                TextBox newPassTxt = new TextBox();
-                newPassTxt.Location = new System.Drawing.Point(140, 135);
-                newPassTxt.Size = new System.Drawing.Size(150, 25);
-                newPassTxt.PasswordChar = '*';
-                changePassForm.Controls.Add(newPassTxt);
-
-                Button SaveBtn = new Button();
-                SaveBtn.Text = "Save";
-                SaveBtn.Location = new System.Drawing.Point(100, 180);
-                SaveBtn.Size = new System.Drawing.Size(80, 30);
+                Button SaveBtn = new Button { Text = "Save", Location = new System.Drawing.Point(100, 140), Size = new System.Drawing.Size(80, 30) };
                 SaveBtn.Click += (s, eArgs) =>
                 {
                     if (userTxt.Text != MockUsername)
                     {
                         MessageBox.Show("Incorrect username!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    else if (oldPassTxt.Text != MockPassword || confirmOldPassTxt.Text != MockPassword)
+                    else if (oldPassTxt.Text != MockPassword)
                     {
-                        MessageBox.Show("Old passwords do not match!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Old password is incorrect!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else if (string.IsNullOrWhiteSpace(newPassTxt.Text))
                     {
@@ -213,8 +206,8 @@ namespace StudentManagementSystem
                         changePassForm.Close();
                     }
                 };
-                changePassForm.Controls.Add(SaveBtn);
 
+                changePassForm.Controls.AddRange(new Control[] { userLbl, userTxt, oldPassLbl, oldPassTxt, newPassLbl, newPassTxt, SaveBtn });
                 changePassForm.ShowDialog();
             }
         }
